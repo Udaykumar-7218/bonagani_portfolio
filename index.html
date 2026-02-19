@@ -16,34 +16,48 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Space Grotesk', 'sans-serif'],
                         heading: ['Outfit', 'sans-serif'],
                     },
                     colors: {
-                        primary: '#38bdf8', // Sky 400
-                        secondary: '#818cf8', // Indigo 400
-                        dark: '#0f172a', // Slate 900
-                        card: '#1e293b', // Slate 800
+                        primary: '#06b6d4', // Cyan 500
+                        secondary: '#8b5cf6', // Violet 500
+                        accent: '#ec4899', // Pink 500
+                        dark: '#000212', // Deepest Black/Blue
+                        glass: 'rgba(255, 255, 255, 0.05)',
                     },
                     animation: {
+                        'blob': 'blob 20s infinite',
                         'float': 'float 6s ease-in-out infinite',
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-glow': 'pulseGlow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 15s linear infinite',
+                        'text-shimmer': 'textShimmer 3s linear infinite',
                     },
                     keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-20px)' },
                         },
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.6, boxShadow: '0 0 20px rgba(6, 182, 212, 0.2)' },
+                            '50%': { opacity: 1, boxShadow: '0 0 40px rgba(6, 182, 212, 0.5)' },
+                        },
+                        textShimmer: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '100%': { backgroundPosition: '200% 50%' },
                         }
                     }
                 }
@@ -52,236 +66,436 @@
     </script>
 
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+        /* EXTRAORDINARY GRAPHICS CSS */
+        
+        body {
+            background-color: #000212;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            cursor: none; /* Hide default cursor completely */
         }
 
-        /* Glassmorphism Utilities */
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
+        /* Ensure default cursor is hidden on all interactables */
+        a, button, input, textarea, select, .hover\:cursor-pointer {
+            cursor: none !important;
+        }
+
+        /* CUSTOM ATOM CURSOR */
+        #cursor-atom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+
+        /* The Nucleus */
+        .cursor-nucleus {
+            width: 10px;
+            height: 10px;
+            background: #06b6d4;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 15px #06b6d4, 0 0 30px #06b6d4;
+            transition: all 0.2s ease;
+        }
+
+        /* The Orbits */
+        .cursor-orbit {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transform-style: preserve-3d;
+            box-sizing: border-box;
+        }
+
+        .orbit-1 { width: 40px; height: 40px; animation: spinOrbit1 1.2s linear infinite; }
+        .orbit-2 { width: 40px; height: 40px; animation: spinOrbit2 1.5s linear infinite; }
+        .orbit-3 { width: 40px; height: 40px; animation: spinOrbit3 1.8s linear infinite; }
+
+        /* The Electrons */
+        .cursor-electron {
+            position: absolute;
+            top: -3px; /* Position on the ring */
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .orbit-1 .cursor-electron { background: #ec4899; color: #ec4899; } /* Pink */
+        .orbit-2 .cursor-electron { background: #8b5cf6; color: #8b5cf6; } /* Violet */
+        .orbit-3 .cursor-electron { background: #22d3ee; color: #22d3ee; } /* Cyan */
+
+        /* Orbit Animations */
+        @keyframes spinOrbit1 {
+            0% { transform: rotateZ(0deg) rotateX(65deg); }
+            100% { transform: rotateZ(360deg) rotateX(65deg); }
+        }
+        @keyframes spinOrbit2 {
+            0% { transform: rotateZ(120deg) rotateX(65deg); }
+            100% { transform: rotateZ(480deg) rotateX(65deg); }
+        }
+        @keyframes spinOrbit3 {
+            0% { transform: rotateZ(240deg) rotateX(65deg); }
+            100% { transform: rotateZ(600deg) rotateX(65deg); }
+        }
+
+        /* Hover Interaction State */
+        body.hovering #cursor-atom .cursor-nucleus {
+            transform: scale(1.8);
+            background: #ffffff;
+            box-shadow: 0 0 30px #ffffff;
+        }
+        body.hovering #cursor-atom .cursor-orbit {
+            border-color: rgba(6, 182, 212, 0.4);
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Ambient Aurora Background */
+        .ambient-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.15), transparent 25%), 
+                radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.15), transparent 25%);
+            filter: blur(100px);
+            pointer-events: none;
+        }
+
+        /* Animated Blobs */
+        .blob-cont {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: blob 25s infinite alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #7c3aed; }
+        .blob-2 { bottom: -10%; right: -10%; width: 50vw; height: 50vw; background: #0891b2; animation-delay: -5s; }
+        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: #be185d; animation-delay: -10s; }
+
+        /* Noise Texture for Cinematic Feel */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        /* High-End Glassmorphism Card */
+        .glazzy-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
-        .gradient-text {
-            background: linear-gradient(to right, #38bdf8, #818cf8);
+        /* Glowing Border Effect on Hover */
+        .glazzy-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .glazzy-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.5),
+                0 0 20px rgba(6, 182, 212, 0.2); /* Cyan Glow */
+        }
+
+        .glazzy-card:hover::before {
+            opacity: 1;
+            background: linear-gradient(45deg, #06b6d4, #8b5cf6, #ec4899);
+        }
+
+        /* Nav Glass */
+        .nav-glass {
+            background: rgba(0, 2, 18, 0.6);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Text Gradients */
+        .text-glow {
+            background: linear-gradient(to right, #22d3ee, #a78bfa, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-        
-        /* Deep Animated Background */
-        .bg-mesh {
-            background: linear-gradient(-45deg, #020617, #0f172a, #172554, #1e1b4b);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            background-attachment: fixed;
+            background-size: 200% auto;
+            animation: textShimmer 5s linear infinite;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Link Hover */
+        a, button, .hover\:cursor-pointer {
+            cursor: none;
         }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000212; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
     </style>
 </head>
-<body class="bg-mesh text-slate-300 antialiased selection:bg-primary selection:text-white">
+<body class="antialiased selection:bg-cyan-500 selection:text-white">
+
+    <!-- LIVING ATOM CURSOR -->
+    <div id="cursor-atom">
+        <div class="cursor-nucleus"></div>
+        <div class="cursor-orbit orbit-1"><div class="cursor-electron"></div></div>
+        <div class="cursor-orbit orbit-2"><div class="cursor-electron"></div></div>
+        <div class="cursor-orbit orbit-3"><div class="cursor-electron"></div></div>
+    </div>
+
+    <!-- Background Layers -->
+    <div class="blob-cont">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    <div class="ambient-light"></div>
+    <div class="noise-overlay"></div>
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass top-0 left-0 border-b border-slate-800/50">
+    <nav class="fixed w-full z-50 nav-glass top-0 left-0 transition-all duration-300">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="font-heading text-2xl font-bold text-white tracking-tight">
-                Udaykumar<span class="text-primary"> Bonagani</span>
+            <a href="#" class="font-heading text-2xl font-black text-white tracking-tighter flex items-center gap-2 group">
+                <!--<span class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-xs shadow-lg shadow-cyan-500/20 group-hover:rotate-12 transition-transform">AI</span> -->
+                Uday<span class="text-cyan-400">Kumar</span>
             </a>
             
             <!-- Desktop Menu -->
-            <div class="hidden md:flex space-x-8 text-sm font-medium">
-                <a href="#home" class="hover:text-primary transition-colors">Home</a>
-                <a href="#about" class="hover:text-primary transition-colors">About</a>
-                <a href="#skills" class="hover:text-primary transition-colors">Skills</a>
-                <a href="#experience" class="hover:text-primary transition-colors">Experience</a>
-                <a href="#projects" class="hover:text-primary transition-colors">Projects</a>
-                <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+            <div class="hidden md:flex space-x-8 text-sm font-bold tracking-wide uppercase text-slate-400">
+                <a href="#home" class="hover:text-white transition-colors hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">Home</a>
+                <a href="#about" class="hover:text-white transition-colors hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">About</a>
+                <a href="#skills" class="hover:text-white transition-colors hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">Skills</a>
+                <a href="#experience" class="hover:text-white transition-colors hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">Experience</a>
+                <a href="#projects" class="hover:text-white transition-colors hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">Projects</a>
+                <a href="#contact" class="hover:text-white transition-colors hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">Contact</a>
             </div>
 
             <!-- Mobile Menu Button -->
-            <button id="menu-btn" class="md:hidden text-white focus:outline-none">
-                <i class="fas fa-bars text-2xl"></i>
+            <button id="menu-btn" class="md:hidden text-white text-2xl focus:outline-none">
+                <i class="fas fa-bars"></i>
             </button>
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800 p-4 absolute w-full">
-            <div class="flex flex-col space-y-4">
-                <a href="#home" class="block hover:text-primary">Home</a>
-                <a href="#about" class="block hover:text-primary">About</a>
-                <a href="#skills" class="block hover:text-primary">Skills</a>
-                <a href="#experience" class="block hover:text-primary">Experience</a>
-                <a href="#projects" class="block hover:text-primary">Projects</a>
-                <a href="#contact" class="block hover:text-primary">Contact</a>
+        <div id="mobile-menu" class="hidden md:hidden nav-glass border-t border-white/10 p-6 absolute w-full">
+            <div class="flex flex-col space-y-4 font-bold text-slate-300">
+                <a href="#home" class="block hover:text-cyan-400">Home</a>
+                <a href="#about" class="block hover:text-cyan-400">About</a>
+                <a href="#skills" class="block hover:text-cyan-400">Skills</a>
+                <a href="#experience" class="block hover:text-cyan-400">Experience</a>
+                <a href="#projects" class="block hover:text-cyan-400">Projects</a>
+                <a href="#contact" class="block hover:text-cyan-400">Contact</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section id="home" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden">
-        <!-- Background Image Added -->
-        <div class="absolute inset-0 z-0">
-            <img src="17929.jpg" alt="Hero Background" class="w-full h-full object-cover opacity-20">
+        <!-- Static BG Image Layer (Very subtle) -->
+        <div class="absolute inset-0 z-0 opacity-20 mix-blend-overlay">
+            <img src="17929.jpg" alt="Atmosphere" class="w-full h-full object-cover">
         </div>
 
-        <!-- Background Glows -->
-        <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-[100px] animate-pulse"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-72 h-72 bg-secondary/20 rounded-full blur-[100px] animate-pulse delay-1000"></div>
-
         <div class="container mx-auto px-6 flex flex-col md:flex-row items-center relative z-10">
-            <!-- Added md:pl-16 to move text somewhat right -->
-            <div class="md:w-1/2 text-center md:text-left animate-fade-in-up md:pl-16">
-                <div class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 rounded-full border border-primary/20">
-                    Available for Opportunities
+            <!-- Text Content -->
+            <div class="md:w-1/2 text-center md:text-left md:pl-12 order-2 md:order-1">
+                <div class="inline-flex items-center px-4 py-1.5 mb-6 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-xs font-bold tracking-[0.2em] uppercase backdrop-blur-md animate-fade-in-up">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 mr-3 animate-pulse"></span>
+                    Available for Work
                 </div>
-                <h1 class="text-5xl md:text-7xl font-bold font-heading text-white leading-tight mb-6">
+                
+                <h1 class="text-6xl md:text-8xl font-black font-heading text-white leading-[0.9] mb-6 tracking-tighter drop-shadow-2xl animate-fade-in-up" style="animation-delay: 0.1s;">
                     Hi, I'm <br>
-                    <span class="gradient-text">Udaykumar</span>
+                    <span class="text-glow">Udaykumar</span>
                 </h1>
-                <p class="text-lg md:text-xl text-slate-400 mb-8 max-w-lg mx-auto md:mx-0">
-                    A motivated Computer Science student specializing in <strong class="text-white">AI & Data Science</strong>. 
-                    I build scalable web applications and machine learning models to solve real-world challenges.
+                
+                <p class="text-lg md:text-xl text-slate-300 mb-8 max-w-lg mx-auto md:mx-0 font-light leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
+                    A motivated Computer Science student specializing in <strong class="text-white font-bold">AI & Data Science</strong>. 
+                    I build scalable web applications and intelligent models.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="#contact" class="px-8 py-3 bg-primary hover:bg-sky-500 text-white font-semibold rounded-lg transition-all shadow-lg shadow-primary/25 text-center">
-                        Hire Me
+                
+                <div class="flex flex-col sm:flex-row gap-5 justify-center md:justify-start animate-fade-in-up" style="animation-delay: 0.3s;">
+                    <a href="#contact" class="relative px-8 py-4 bg-white text-black font-bold rounded-xl overflow-hidden group hover:scale-105 transition-transform shadow-[0_0_40px_rgba(255,255,255,0.3)]">
+                        <span class="relative z-10">Hire Me</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 z-20 transition-opacity font-bold">Let's Talk!</span>
                     </a>
-                    <a href="#" class="px-8 py-3 glass hover:bg-white/10 text-white font-semibold rounded-lg transition-all border border-slate-700 text-center">
-                        <i class="fas fa-download mr-2"></i> Download Resume
+                    <a href="UDAY RESUME-18.pdf" download="UDAY RESUME-18.pdf" title="Download UDAY RESUME-18.pdf" class="px-8 py-4 glazzy-card text-white font-bold rounded-xl flex items-center justify-center gap-3 hover:bg-white/10 group">
+                        <span>Download Resume</span> <i class="fas fa-arrow-down transform group-hover:translate-y-1 transition-transform"></i>
                     </a>
                 </div>
                 
-                <div class="mt-8 flex gap-6 justify-center md:justify-start text-slate-400">
-                    <a href="https://linkedin.com/in/bonagani-uday-kumar" target="_blank" class="hover:text-white transition-transform hover:-translate-y-1"><i class="fab fa-linkedin text-2xl"></i></a>
-                    <a href="https://github.com/Udaykumar" target="_blank" class="hover:text-white transition-transform hover:-translate-y-1"><i class="fab fa-github text-2xl"></i></a>
-                    <a href="mailto:udaykumarbonagani@gmail.com" class="hover:text-white transition-transform hover:-translate-y-1"><i class="fas fa-envelope text-2xl"></i></a>
+                <div class="mt-12 flex gap-6 justify-center md:justify-start animate-fade-in-up" style="animation-delay: 0.4s;">
+                    <a href="https://linkedin.com/in/bonagani-uday-kumar" target="_blank" class="w-12 h-12 rounded-full glazzy-card flex items-center justify-center text-slate-300 hover:text-white hover:border-cyan-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all text-xl"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/Udaykumar" target="_blank" class="w-12 h-12 rounded-full glazzy-card flex items-center justify-center text-slate-300 hover:text-white hover:border-white hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all text-xl"><i class="fab fa-github"></i></a>
+                    <a href="mailto:udaykumarbonagani@gmail.com" class="w-12 h-12 rounded-full glazzy-card flex items-center justify-center text-slate-300 hover:text-white hover:border-pink-500 hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all text-xl"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
             
-            <div class="md:w-1/2 mt-12 md:mt-0 flex justify-center relative">
-                <!-- Abstract Avatar / Illustration placeholder -->
-                <div class="relative w-72 h-72 md:w-96 md:h-96 animate-float">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-full blur-2xl opacity-30"></div>
+            <!-- Hero Visual / Profile Image -->
+            <div class="md:w-1/2 mt-16 md:mt-0 flex justify-center relative order-1 md:order-2">
+                <div class="relative w-72 h-72 md:w-[450px] md:h-[450px] animate-float">
+                    <!-- Spinning Rings -->
+                    <div class="absolute -inset-8 border border-cyan-500/20 rounded-full animate-spin-slow dashed-border"></div>
+                    <div class="absolute -inset-16 border border-violet-500/10 rounded-full animate-spin-slow" style="animation-direction: reverse; animation-duration: 20s;"></div>
                     
-                    <!-- PROFILE PICTURE SLOT START -->
-                    <div class="relative w-full h-full rounded-2xl bg-slate-800 border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center group">
-                        
-                        <!-- 
-                           INSTRUCTIONS: 
-                           1. Save your photo in the same folder as this file.
-                           2. Change the src link below to your filename (e.g., src="my-photo.jpg").
-                        -->
+                    <!-- Glow Behind Image -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500 to-violet-600 rounded-full blur-[80px] opacity-50"></div>
+                    
+                    <!-- Glass Card Container for Image -->
+                    <div class="relative w-full h-full rounded-[2rem] glazzy-card p-2 rotate-6 hover:rotate-0 transition-transform duration-700 overflow-hidden group">
                         <img 
                             src="uday.jpg" 
                             alt="Udaykumar Bonagani" 
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            class="w-full h-full object-cover rounded-[1.5rem] shadow-2xl transition-all duration-500"
                         >
-                        
+                        <!-- Reflection Effect -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none rounded-[1.5rem]"></div>
                     </div>
-                    <!-- PROFILE PICTURE SLOT END -->
+                    
+                    <!-- Floating Badge -->
+                    <div class="absolute -bottom-4 -left-8 glazzy-card px-6 py-4 rounded-2xl flex items-center gap-4 animate-float" style="animation-delay: 1s;">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-600 flex items-center justify-center text-black font-bold">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 uppercase tracking-wider font-bold">Status</p>
+                            <p class="text-white font-bold">Coding...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Education & About Section -->
-    <section id="about" class="py-20 bg-slate-900/50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-heading font-bold text-white mb-4">About Me</h2>
-                <div class="w-20 h-1 bg-primary mx-auto rounded"></div>
+    <section id="about" class="py-32 relative">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-heading font-black text-white mb-6 tracking-tight">About Me</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto rounded-full"></div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-12">
+            <div class="grid md:grid-cols-2 gap-10">
                 <!-- Education Card -->
-                <div class="group relative p-8 rounded-2xl border border-slate-700 hover:border-primary/50 transition-colors overflow-hidden bg-card">
-                    <!-- Background Image -->
-                    <div class="absolute inset-0">
-                        <img src="https://static.vecteezy.com/system/resources/thumbnails/006/817/039/small/educational-equipment-boards-and-books-education-concept-with-copy-space-photo.jpg" alt="Education Background" class="w-full h-full object-cover opacity-60 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-card via-card/90 to-transparent"></div>
+                <div class="glazzy-card rounded-3xl p-8 group">
+                    <!-- Background Image Overlay -->
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://static.vecteezy.com/system/resources/thumbnails/006/817/039/small/educational-equipment-boards-and-books-education-concept-with-copy-space-photo.jpg" class="w-full h-full object-cover opacity-20 group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#000212] via-[#000212]/90 to-transparent"></div>
                     </div>
 
                     <div class="relative z-10">
-                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-                            <i class="fas fa-graduation-cap text-primary mr-3"></i> Education
+                        <h3 class="text-3xl font-bold text-white mb-8 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+                                <i class="fas fa-graduation-cap text-xl"></i>
+                            </div>
+                            Education
                         </h3>
                         
-                        <div class="border-l-2 border-slate-700 pl-6 relative space-y-8">
-                            <!-- Degree 1 -->
-                            <div class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-primary ring-4 ring-slate-900"></span>
-                                <h4 class="text-lg font-bold text-white">B.Tech in AI & Data Science</h4>
-                                <p class="text-primary font-medium">St. Peters Engineering College</p>
-                                <p class="text-sm text-slate-400 mt-1">2022 - 2026 | CGPA: 7.73 (till 6th Sem)</p>
-                                <p class="text-sm text-slate-500 mt-2">Specializing in Machine Learning, Data Structures, and Algorithms.</p>
+                        <div class="space-y-10 border-l-2 border-white/10 pl-8 ml-6">
+                            <div class="relative group/item">
+                                <span class="absolute -left-[39px] top-2 w-5 h-5 rounded-full border-4 border-[#000212] bg-cyan-500 group-hover/item:shadow-[0_0_15px_#06b6d4] transition-shadow"></span>
+                                <h4 class="text-xl font-bold text-white group-hover/item:text-cyan-400 transition-colors">B.Tech in AI & Data Science</h4>
+                                <p class="text-slate-300 font-medium mt-1">St. Peters Engineering College</p>
+                                <div class="mt-2 inline-block px-3 py-1 rounded bg-white/5 border border-white/10 text-xs font-mono text-cyan-200">
+                                    2022 - 2026 | CGPA: 7.73
+                                </div>
                             </div>
 
-                            <!-- Degree 2 -->
-                            <div class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-secondary ring-4 ring-slate-900"></span>
-                                <h4 class="text-lg font-bold text-white">Intermediate Education</h4>
-                                <p class="text-primary font-medium">Kakatiya Junior College</p>
-                                <p class="text-sm text-slate-400 mt-1">2020 - 2022 | Marks: 788/1000</p>
+                            <div class="relative group/item">
+                                <span class="absolute -left-[39px] top-2 w-5 h-5 rounded-full border-4 border-[#000212] bg-violet-500 group-hover/item:shadow-[0_0_15px_#8b5cf6] transition-shadow"></span>
+                                <h4 class="text-xl font-bold text-white group-hover/item:text-violet-400 transition-colors">Intermediate Education</h4>
+                                <p class="text-slate-300 font-medium mt-1">Kakatiya Junior College</p>
+                                <div class="mt-2 inline-block px-3 py-1 rounded bg-white/5 border border-white/10 text-xs font-mono text-violet-200">
+                                    2020 - 2022 | Marks: 788
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Achievements -->
-                <div class="group relative p-8 rounded-2xl border border-slate-700 hover:border-secondary/50 transition-colors overflow-hidden bg-card">
-                    <!-- Background Image -->
-                    <div class="absolute inset-0">
-                        <img src="https://media.istockphoto.com/id/1283030328/photo/silhouette-of-businessman-holding-target-board-on-the-top-of-mountain-with-over-blue-sky-and.jpg?s=612x612&w=0&k=20&c=2ZifINbmOZq9dWW8iviW1k275x2zDy8w5_TBuLB5Sso=" alt="Achievements Background" class="w-full h-full object-cover opacity-40 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-card via-card/90 to-transparent"></div>
+                <!-- Achievements Card -->
+                <div class="glazzy-card rounded-3xl p-8 group">
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://media.istockphoto.com/id/1283030328/photo/silhouette-of-businessman-holding-target-board-on-the-top-of-mountain-with-over-blue-sky-and.jpg?s=612x612&w=0&k=20&c=2ZifINbmOZq9dWW8iviW1k275x2zDy8w5_TBuLB5Sso=" class="w-full h-full object-cover opacity-20 group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#000212] via-[#000212]/90 to-transparent"></div>
                     </div>
 
                     <div class="relative z-10">
-                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-                            <i class="fas fa-trophy text-secondary mr-3"></i> Achievements
+                        <h3 class="text-3xl font-bold text-white mb-8 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-violet-500/20 flex items-center justify-center text-violet-400 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                                <i class="fas fa-trophy text-xl"></i>
+                            </div>
+                            Achievements
                         </h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                        
+                        <ul class="space-y-6">
+                            <li class="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <i class="fas fa-check-circle text-green-400 mt-1.5 text-lg"></i>
                                 <div>
-                                    <strong class="text-white block">Microsoft Event Organizer</strong>
-                                    <span class="text-sm text-slate-400">Organized 4 "Beyond Tech" events at Microsoft Hyderabad for 300+ attendees.</span>
+                                    <strong class="text-white block text-lg">Microsoft Event Organizer</strong>
+                                    <span class="text-sm text-slate-400">Led "Beyond Tech" for 300+ attendees with seamless execution.</span>
                                 </div>
                             </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <li class="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <i class="fas fa-check-circle text-green-400 mt-1.5 text-lg"></i>
                                 <div>
-                                    <strong class="text-white block">100xDevs Certification</strong>
-                                    <span class="text-sm text-slate-400">Completed Full Stack Web Development cohort.</span>
+                                    <strong class="text-white block text-lg">100xDevs Certification</strong>
+                                    <span class="text-sm text-slate-400">Mastered Full Stack Web Development concepts.</span>
                                 </div>
                             </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <li class="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <i class="fas fa-check-circle text-green-400 mt-1.5 text-lg"></i>
                                 <div>
-                                    <strong class="text-white block">HackerRank Certified</strong>
-                                    <span class="text-sm text-slate-400">Verified skills in Java and Python.</span>
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
-                                <div>
-                                    <strong class="text-white block">Cisco NetAcad</strong>
-                                    <span class="text-sm text-slate-400">PCPA (Python), IT Essentials, and Cybersecurity Essentials.</span>
+                                    <strong class="text-white block text-lg">HackerRank Gold Badge</strong>
+                                    <span class="text-sm text-slate-400">Certified proficiency in Java and Python algorithms.</span>
                                 </div>
                             </li>
                         </ul>
@@ -292,141 +506,148 @@
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="py-20">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Technical Skills</h2>
-                <div class="w-20 h-1 bg-secondary mx-auto rounded"></div>
+    <section id="skills" class="py-32 relative">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-heading font-black text-white mb-6 tracking-tight">Technical Skills</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-accent to-orange-500 mx-auto rounded-full"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                
                 <!-- Languages -->
-                <div class="group relative bg-card p-6 rounded-xl border border-slate-700 hover:border-primary transition-all overflow-hidden">
-                    <!-- Background Image -->
+                <div class="glazzy-card p-10 rounded-3xl group text-center">
                     <div class="absolute inset-0">
-                        <img src="https://www.shutterstock.com/image-photo/hands-typing-on-laptop-programming-600nw-2480023489.jpg" alt="Programming Background" class="w-full h-full object-cover opacity-40 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-card via-card/80 to-transparent"></div>
+                        <img src="https://www.shutterstock.com/image-photo/hands-typing-on-laptop-programming-600nw-2480023489.jpg" class="w-full h-full object-cover opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-b from-[#000212]/0 via-[#000212]/80 to-[#000212]"></div>
                     </div>
                     
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
-                            <i class="fas fa-code text-primary text-xl"></i>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-4xl mb-8 shadow-[0_0_30px_rgba(6,182,212,0.4)] group-hover:scale-110 transition-transform">
+                            <i class="fas fa-code"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-4">Languages</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-primary hover:text-slate-900 transition-colors cursor-default">Python</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-primary hover:text-slate-900 transition-colors cursor-default">Java</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-primary hover:text-slate-900 transition-colors cursor-default">C++</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-primary hover:text-slate-900 transition-colors cursor-default">SQL</span>
+                        <h3 class="text-2xl font-bold text-white mb-6">Languages</h3>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-cyan-500 hover:border-cyan-500 hover:text-black hover:font-bold transition-all cursor-default">Python</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-cyan-500 hover:border-cyan-500 hover:text-black hover:font-bold transition-all cursor-default">Java</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-cyan-500 hover:border-cyan-500 hover:text-black hover:font-bold transition-all cursor-default">C++</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-cyan-500 hover:border-cyan-500 hover:text-black hover:font-bold transition-all cursor-default">SQL</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Web Development -->
-                <div class="group relative bg-card p-6 rounded-xl border border-slate-700 hover:border-secondary transition-all overflow-hidden">
-                    <!-- Background Image -->
+                <div class="glazzy-card p-10 rounded-3xl group text-center">
                     <div class="absolute inset-0">
-                        <img src="https://d1ub0o53i85pdh.cloudfront.net/uploads/2021/09/Facebook-Linkedin-image-template-10.jpg" alt="Full Stack Background" class="w-full h-full object-cover opacity-40 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-card via-card/80 to-transparent"></div>
+                        <img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXcPuyWHrU_ZPhxi2VYXBRQOIwq4d0RQ8JTusDb7yZ6i0LdkR_szjbtK5DjCJoqeZ8MrwVLMGsKL2bXjyMlG6wGT8u50SLhOsXLgGNjeG-8u8nU7mq0wjXIkOvgKiOSHFW6qbcoLRw?key=zhY4FDBv1MLLN5niIH_rVONZ" class="w-full h-full object-cover opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-b from-[#000212]/0 via-[#000212]/80 to-[#000212]"></div>
                     </div>
 
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mb-4">
-                            <i class="fas fa-laptop-code text-secondary text-xl"></i>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-4xl mb-8 shadow-[0_0_30px_rgba(139,92,246,0.4)] group-hover:scale-110 transition-transform">
+                            <i class="fas fa-laptop-code"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-4">Full Stack</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-secondary hover:text-slate-900 transition-colors cursor-default">React.js</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-secondary hover:text-slate-900 transition-colors cursor-default">Node.js</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-secondary hover:text-slate-900 transition-colors cursor-default">HTML5</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-secondary hover:text-slate-900 transition-colors cursor-default">Tailwind CSS</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-secondary hover:text-slate-900 transition-colors cursor-default">JavaScript</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-secondary hover:text-slate-900 transition-colors cursor-default">Bootstrap</span>
+                        <h3 class="text-2xl font-bold text-white mb-6">Full Stack</h3>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-violet-500 hover:border-violet-500 hover:text-white hover:font-bold transition-all cursor-default">React.js</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-violet-500 hover:border-violet-500 hover:text-white hover:font-bold transition-all cursor-default">Node.js</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-violet-500 hover:border-violet-500 hover:text-white hover:font-bold transition-all cursor-default">Tailwind</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-violet-500 hover:border-violet-500 hover:text-white hover:font-bold transition-all cursor-default">HTML5</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tools & Platforms -->
-                <div class="group relative bg-card p-6 rounded-xl border border-slate-700 hover:border-green-400 transition-all overflow-hidden">
-                    <!-- Background Image -->
+                <!-- Tools & Cloud -->
+                <div class="glazzy-card p-10 rounded-3xl group text-center">
                     <div class="absolute inset-0">
-                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" alt="Cloud & Tools Background" class="w-full h-full object-cover opacity-380 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-card via-card/80 to-transparent"></div>
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" class="w-full h-full object-cover opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-b from-[#000212]/0 via-[#000212]/80 to-[#000212]"></div>
                     </div>
 
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 bg-green-400/20 rounded-lg flex items-center justify-center mb-4">
-                            <i class="fas fa-tools text-green-400 text-xl"></i>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white text-4xl mb-8 shadow-[0_0_30px_rgba(236,72,153,0.4)] group-hover:scale-110 transition-transform">
+                            <i class="fas fa-tools"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-4">Tools & Cloud</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-green-400 hover:text-slate-900 transition-colors cursor-default">AWS</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-green-400 hover:text-slate-900 transition-colors cursor-default">Git & GitHub</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-green-400 hover:text-slate-900 transition-colors cursor-default">Postman</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-green-400 hover:text-slate-900 transition-colors cursor-default">Hugging Face</span>
-                            <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-white hover:bg-green-400 hover:text-slate-900 transition-colors cursor-default">VS Code</span>
+                        <h3 class="text-2xl font-bold text-white mb-6">Tools & Cloud</h3>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-pink-500 hover:border-pink-500 hover:text-white hover:font-bold transition-all cursor-default">AWS</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-pink-500 hover:border-pink-500 hover:text-white hover:font-bold transition-all cursor-default">Git</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-pink-500 hover:border-pink-500 hover:text-white hover:font-bold transition-all cursor-default">Postman</span>
+                            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-slate-200 hover:bg-pink-500 hover:border-pink-500 hover:text-white hover:font-bold transition-all cursor-default">VS Code</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="mt-8 text-center">
-                <p class="text-slate-400 text-sm">Also proficient in <span class="text-white">OOPS, DBMS, Computer Networks, and Operating Systems</span>.</p>
+            <div class="mt-16 text-center">
+                <div class="glazzy-card inline-block px-8 py-4 rounded-full border border-white/10">
+                    <p class="text-slate-300 text-sm font-mono tracking-wide">
+                        <span class="text-cyan-400">const</span> <span class="text-violet-400">coreConcepts</span> = [<span class="text-green-400">'OOPS'</span>, <span class="text-green-400">'DBMS'</span>, <span class="text-green-400">'Networks'</span>, <span class="text-green-400">'OS'</span>];
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Experience Section -->
-    <section id="experience" class="py-20 bg-slate-900/50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Experience</h2>
-                <div class="w-20 h-1 bg-primary mx-auto rounded"></div>
+    <section id="experience" class="py-32 relative">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-heading font-black text-white mb-6 tracking-tight">Experience</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-cyan-500 to-accent mx-auto rounded-full"></div>
             </div>
 
-            <div class="max-w-4xl mx-auto space-y-8">
-                <!-- Job 1: Data Science Intern -->
-                <div class="group relative p-6 md:p-8 rounded-2xl border border-slate-700 hover:border-primary/50 transition-colors overflow-hidden bg-card flex flex-col md:flex-row gap-6">
-                    <!-- Background Image -->
-                    <div class="absolute inset-0">
-                        <img src="https://mohammed-mansoor-portfolio.vercel.app/assets/saiket-ONVAyMZ2.png" alt="SaiKet Systems" class="w-full h-full object-cover opacity-40 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-card via-card/90 to-transparent"></div>
-                    </div>
-
-                    <div class="relative z-10 flex flex-col md:flex-row gap-6 w-full">
-                        <div class="md:w-1/4">
-                            <h4 class="text-xl font-bold text-white">Data Science Intern</h4>
-                            <p class="text-primary mt-1">SaiKet Systems</p>
-                            <p class="text-sm text-slate-400 mt-2"><i class="far fa-calendar-alt mr-2"></i>Jun 2024 - Jul 2024</p>
-                            <p class="text-sm text-slate-500 mt-1">Hyderabad</p>
+            <div class="max-w-5xl mx-auto space-y-12">
+                <!-- Job 1 -->
+                <div class="glazzy-card p-1 rounded-3xl relative overflow-hidden group">
+                    <div class="bg-[#000212]/60 backdrop-blur-xl p-8 rounded-[20px] relative z-10 flex flex-col md:flex-row gap-10">
+                        <div class="absolute inset-0 z-0">
+                            <img src="https://mohammed-mansoor-portfolio.vercel.app/assets/saiket-ONVAyMZ2.png" class="w-full h-full object-cover opacity-10 group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-r from-[#000212] via-[#000212]/95 to-transparent"></div>
                         </div>
-                        <div class="md:w-3/4 border-l border-slate-700 pl-6">
-                            <ul class="list-disc list-outside space-y-2 text-slate-300 ml-4">
-                                <li>Demonstrated exceptional Data Science skills, working on real-world datasets and model implementation.</li>
-                                <li>Approached new assignments with enthusiasm, showcasing a strong passion for AI/ML solutions.</li>
+
+                        <div class="relative z-10 md:w-1/3 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-6">
+                            <h4 class="text-3xl font-bold text-white">Data Science Intern</h4>
+                            <p class="text-cyan-400 font-bold text-lg mt-1">SaiKet Systems</p>
+                            <div class="flex items-center gap-2 mt-4 text-sm text-slate-400 font-mono bg-white/5 p-2 rounded-lg w-fit">
+                                <i class="far fa-calendar-alt text-cyan-400"></i> Jun 2024 - Jul 2024
+                            </div>
+                            <div class="flex items-center gap-2 mt-2 text-sm text-slate-400">
+                                <i class="fas fa-map-marker-alt text-cyan-400"></i> Hyderabad
+                            </div>
+                        </div>
+                        
+                        <div class="relative z-10 md:w-2/3 flex items-center">
+                            <ul class="space-y-4 text-slate-300">
+                                <li class="flex items-start"><span class="text-cyan-400 mr-3 text-xl">▹</span> <span class="leading-relaxed">Demonstrated exceptional Data Science skills working on real-world datasets.</span></li>
+                                <li class="flex items-start"><span class="text-cyan-400 mr-3 text-xl">▹</span> <span class="leading-relaxed">Designed and implemented machine learning models with high accuracy.</span></li>
+                                <li class="flex items-start"><span class="text-cyan-400 mr-3 text-xl">▹</span> <span class="leading-relaxed">Collaborated with cross-functional teams to integrate AI solutions.</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- Job 2: Sales Virtual Intern -->
-                <div class="group relative p-6 md:p-8 rounded-2xl border border-slate-700 hover:border-secondary/50 transition-colors overflow-hidden bg-card flex flex-col md:flex-row gap-6">
-                    <!-- Background Image -->
-                    <div class="absolute inset-0">
-                        <img src="https://www.theforage.com/_next/image?url=https%3A%2F%2Fcdn.theforage.com%2Fvinternships%2Fcompanyassets%2FP2whMfgG9v48cqWwx%2FdpN7PmoeCuNXx6YCQ%2F1675980884134%2Fmono%20and%20color%20rb%20offsite.png&w=3840&q=75" alt="Red Bull (Forage)" class="w-full h-full object-cover opacity-20 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-card via-card/90 to-transparent"></div>
-                    </div>
-
-                    <div class="relative z-10 flex flex-col md:flex-row gap-6 w-full">
-                        <div class="md:w-1/4">
-                            <h4 class="text-xl font-bold text-white">Sales Virtual Intern</h4>
-                            <p class="text-secondary mt-1">Red Bull (Forage)</p>
-                            <p class="text-sm text-slate-400 mt-2"><i class="far fa-calendar-alt mr-2"></i>Virtual</p>
+                <!-- Job 2 -->
+                <div class="glazzy-card p-1 rounded-3xl relative overflow-hidden group">
+                    <div class="bg-[#000212]/60 backdrop-blur-xl p-8 rounded-[20px] relative z-10 flex flex-col md:flex-row gap-10">
+                        <div class="absolute inset-0 z-0">
+                            <img src="https://www.theforage.com/_next/image?url=https%3A%2F%2Fcdn.theforage.com%2Fvinternships%2Fcompanyassets%2FP2whMfgG9v48cqWwx%2FdpN7PmoeCuNXx6YCQ%2F1675980884134%2Fmono%20and%20color%20rb%20offsite.png&w=3840&q=75" class="w-full h-full object-cover opacity-10 group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-r from-[#000212] via-[#000212]/95 to-transparent"></div>
                         </div>
-                        <div class="md:w-3/4 border-l border-slate-700 pl-6">
-                            <ul class="list-disc list-outside space-y-2 text-slate-300 ml-4">
-                                <li>Developed solutions that integrate seamlessly into distributed systems using innovative technology.</li>
-                                <li>Contributed to automated testing and monitoring tools to ensure high-quality software.</li>
+
+                        <div class="relative z-10 md:w-1/3 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-6">
+                            <h4 class="text-3xl font-bold text-white">Sales Virtual Intern</h4>
+                            <p class="text-violet-400 font-bold text-lg mt-1">Red Bull (Forage)</p>
+                            <div class="flex items-center gap-2 mt-4 text-sm text-slate-400 font-mono bg-white/5 p-2 rounded-lg w-fit">
+                                <i class="far fa-calendar-alt text-violet-400"></i> Virtual
+                            </div>
+                        </div>
+                        
+                        <div class="relative z-10 md:w-2/3 flex items-center">
+                            <ul class="space-y-4 text-slate-300">
+                                <li class="flex items-start"><span class="text-violet-400 mr-3 text-xl">▹</span> <span class="leading-relaxed">Developed distributed system solutions using innovative technology.</span></li>
+                                <li class="flex items-start"><span class="text-violet-400 mr-3 text-xl">▹</span> <span class="leading-relaxed">Contributed to automated testing and monitoring tools.</span></li>
+                                <li class="flex items-start"><span class="text-violet-400 mr-3 text-xl">▹</span> <span class="leading-relaxed">Analyzed complex sales data trends for strategic decisions.</span></li>
                             </ul>
                         </div>
                     </div>
@@ -436,81 +657,73 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-20">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Projects</h2>
-                <div class="w-20 h-1 bg-secondary mx-auto rounded"></div>
+    <section id="projects" class="py-32 relative">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-heading font-black text-white mb-6 tracking-tight">Projects</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-cyan-500 to-violet-500 mx-auto rounded-full"></div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto">
                 <!-- Project 1 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-card border border-slate-700 hover:border-primary transition-all duration-300">
-                    <!-- Added Background Image SPW.png with Vignette -->
-                    <div class="absolute inset-0">
-                        <img src="https://media.istockphoto.com/id/1159030397/vector/vector-of-a-child-a-boy-looking-at-the-stairs-leading-to-the-door-of-modern-digital-world.jpg?s=612x612&w=0&k=20&c=cPMvHwuxLy3rWZaHzhiXY_TFZXkl0KGp-wHGFA8vak4=" alt="Student Portal Website" class="w-full h-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105">
-                        <!-- Vignette Overlay -->
-                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(15,23,42,0.8)_100%)]"></div>
-                    </div>
-                    <!-- Gradient for text legibility -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent opacity-90"></div>
-                    
-                    <div class="relative p-8 h-full flex flex-col justify-end min-h-[300px]">
-                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fas fa-university text-9xl"></i>
-                        </div>
+                <div class="glazzy-card rounded-3xl overflow-hidden group hover:-translate-y-4 transition-transform duration-500">
+                    <div class="h-64 relative overflow-hidden">
+                        <img src="SPW.png" alt="Student Portal Website" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <!-- Dark Vignette Overlay -->
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,2,18,0.9)_100%)]"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#000212] via-transparent to-transparent"></div>
                         
-                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Student Portal Website</h3>
-                        <p class="text-slate-300 mb-4 line-clamp-3">
-                            A responsive web-based student portal designed to manage and display academic information. Features include student profiles, result tracking, and course details with a clean, user-friendly interface.
+                        <div class="absolute top-4 right-4 w-14 h-14 glazzy-card rounded-full flex items-center justify-center text-white text-2xl shadow-lg">
+                            <i class="fas fa-university"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 relative">
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">Student Portal Website</h3>
+                        <p class="text-slate-400 mb-8 leading-relaxed">
+                            A responsive academic management system featuring student profiles, result tracking, and course details. Built for efficiency and clarity.
                         </p>
                         
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="px-2 py-1 text-xs bg-slate-800 border border-slate-600 rounded text-slate-300">HTML</span>
-                            <span class="px-2 py-1 text-xs bg-slate-800 border border-slate-600 rounded text-slate-300">CSS</span>
-                            <span class="px-2 py-1 text-xs bg-slate-800 border border-slate-600 rounded text-slate-300">Git</span>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="px-4 py-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold rounded-full uppercase tracking-wide">HTML</span>
+                            <span class="px-4 py-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold rounded-full uppercase tracking-wide">CSS</span>
+                            <span class="px-4 py-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold rounded-full uppercase tracking-wide">Git</span>
                         </div>
                         
-                        <div class="flex gap-4">
-                            <a href="#" class="text-white hover:text-primary font-medium text-sm flex items-center">
-                                View Code <i class="fab fa-github ml-2"></i>
-                            </a>
-                        </div>
+                        <a href="#" class="inline-flex items-center gap-2 text-white font-bold hover:text-cyan-400 transition-colors">
+                            View Source Code <i class="fas fa-arrow-right ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 2 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-card border border-slate-700 hover:border-secondary transition-all duration-300">
-                    <!-- Added Background Image upf.jpg with Vignette -->
-                    <div class="absolute inset-0">
-                        <img src="Cover-2.png" alt="Portfolio Website" class="w-full h-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105">
-                        <!-- Vignette Overlay - Darkened edges -->
-                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,rgba(2,6,23,0.9)_100%)]"></div>
-                    </div>
-                    <!-- Gradient for text legibility -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/90 to-transparent opacity-90"></div>
-                    
-                    <div class="relative p-8 h-full flex flex-col justify-end min-h-[300px]">
-                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fas fa-id-card text-9xl"></i>
-                        </div>
+                <div class="glazzy-card rounded-3xl overflow-hidden group hover:-translate-y-4 transition-transform duration-500">
+                    <div class="h-64 relative overflow-hidden">
+                        <img src="Cover-2.png" alt="Portfolio Website" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <!-- Dark Vignette Overlay -->
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,2,18,0.9)_100%)]"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#000212] via-transparent to-transparent"></div>
                         
-                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-secondary transition-colors">Portfolio Website</h3>
-                        <p class="text-slate-300 mb-4 line-clamp-3">
-                            A showcase of skills and projects featuring responsive design, GitHub hosting, and modern frontend techniques. Built to demonstrate proficiency in web development basics and deployment.
+                        <div class="absolute top-4 right-4 w-14 h-14 glazzy-card rounded-full flex items-center justify-center text-white text-2xl shadow-lg">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 relative">
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-violet-400 transition-colors">Portfolio Website</h3>
+                        <p class="text-slate-400 mb-8 leading-relaxed">
+                            A high-performance showcase of skills and projects featuring glassmorphism UI, responsive layout, and GitHub deployment.
                         </p>
                         
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="px-2 py-1 text-xs bg-slate-800 border border-slate-600 rounded text-slate-300">HTML</span>
-                            <span class="px-2 py-1 text-xs bg-slate-800 border border-slate-600 rounded text-slate-300">CSS</span>
-                            <span class="px-2 py-1 text-xs bg-slate-800 border border-slate-600 rounded text-slate-300">JavaScript</span>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="px-4 py-1.5 bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-bold rounded-full uppercase tracking-wide">HTML</span>
+                            <span class="px-4 py-1.5 bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-bold rounded-full uppercase tracking-wide">Tailwind</span>
+                            <span class="px-4 py-1.5 bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-bold rounded-full uppercase tracking-wide">JS</span>
                         </div>
                         
-                        <div class="flex gap-4">
-                            <a href="#" class="text-white hover:text-secondary font-medium text-sm flex items-center">
-                                Live Demo <i class="fas fa-external-link-alt ml-2"></i>
-                            </a>
-                        </div>
+                        <a href="#" class="inline-flex items-center gap-2 text-white font-bold hover:text-violet-400 transition-colors">
+                            Live Demo <i class="fas fa-external-link-alt ml-1 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -518,87 +731,76 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-slate-900/50">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Get In Touch</h2>
-                <div class="w-20 h-1 bg-primary mx-auto rounded mb-8"></div>
-                <p class="text-slate-400">
-                    I am currently looking for full-time opportunities or internships in AI, Data Science, and Full Stack Development.
+    <section id="contact" class="py-32 relative">
+        <div class="container mx-auto px-6 max-w-5xl relative z-10">
+            <div class="glazzy-card rounded-[50px] p-12 md:p-20 border-t border-white/20 text-center relative overflow-hidden">
+                <!-- Background Glow -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-cyan-500/10 to-transparent pointer-events-none"></div>
+                
+                <h2 class="text-4xl md:text-7xl font-heading font-black text-white mb-8">Let's Work Together</h2>
+                <p class="text-slate-300 mb-12 text-xl max-w-2xl mx-auto leading-relaxed">
+                    I am actively seeking opportunities in AI, Data Science, and Full Stack Development. Got a project or an offer? Let's connect!
                 </p>
-            </div>
 
-            <div class="glass p-8 rounded-2xl border-t-4 border-primary">
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div class="space-y-6">
-                        <h3 class="text-2xl font-bold text-white">Contact Info</h3>
-                        
-                        <div class="flex items-center group">
-                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-primary group-hover:text-white transition-colors">
-                                <i class="fas fa-phone-alt text-primary group-hover:text-white"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-slate-400">Phone</p>
-                                <a href="tel:+918297901319" class="text-white hover:text-primary">+91 8297901319</a>
-                            </div>
-                        </div>
+                <div class="flex flex-col md:flex-row justify-center gap-6 mb-16">
+                    <a href="mailto:udaykumarbonagani@gmail.com" class="px-10 py-5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl flex items-center justify-center gap-3 text-white font-bold text-lg hover:scale-105 transition-transform shadow-lg shadow-cyan-500/30">
+                        <i class="fas fa-envelope"></i> 
+                        Email Me
+                    </a>
+                    <a href="tel:+918297901319" class="px-10 py-5 glazzy-card rounded-2xl flex items-center justify-center gap-3 text-white font-bold text-lg hover:bg-white/10 transition-colors border border-white/20">
+                        <i class="fas fa-phone"></i>
+                        +91 8297901319
+                    </a>
+                </div>
 
-                        <div class="flex items-center group">
-                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-primary group-hover:text-white transition-colors">
-                                <i class="fas fa-envelope text-primary group-hover:text-white"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-slate-400">Email</p>
-                                <a href="mailto:udaykumarbonagani@gmail.com" class="text-white hover:text-primary">udaykumarbonagani@gmail.com</a>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center group">
-                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mr-4 group-hover:bg-primary group-hover:text-white transition-colors">
-                                <i class="fas fa-map-marker-alt text-primary group-hover:text-white"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-slate-400">Location</p>
-                                <p class="text-white">Hyderabad, Telangana</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Simple Form Mockup -->
-                    <form class="space-y-4" onsubmit="event.preventDefault(); alert('This is a demo form. Please email me directly!');">
-                        <div>
-                            <label class="block text-sm text-slate-400 mb-1">Your Name</label>
-                            <input type="text" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors" placeholder="John Doe">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-slate-400 mb-1">Your Email</label>
-                            <input type="email" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors" placeholder="john@example.com">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-slate-400 mb-1">Message</label>
-                            <textarea rows="4" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors" placeholder="Hello Uday..."></textarea>
-                        </div>
-                        <button class="w-full bg-primary hover:bg-sky-500 text-white font-bold py-2 rounded-lg transition-colors shadow-lg shadow-primary/25">
-                            Send Message
-                        </button>
-                    </form>
+                <div class="flex justify-center gap-10">
+                    <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors hover:scale-125 transform duration-200"><i class="fab fa-linkedin text-4xl"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-white transition-colors hover:scale-125 transform duration-200"><i class="fab fa-github text-4xl"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-pink-500 transition-colors hover:scale-125 transform duration-200"><i class="fab fa-instagram text-4xl"></i></a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-8 bg-black border-t border-slate-800 text-center text-slate-500 text-sm">
-        <p>&copy; 2024 Udaykumar Bonagani. All rights reserved.</p>
-        <div class="mt-2 space-x-4">
-            <a href="https://linkedin.com/in/bonagani-uday-kumar" class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
-            <a href="https://github.com/Udaykumar" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
-        </div>
+    <footer class="py-10 text-center text-slate-500 text-sm border-t border-white/5 bg-[#000212] relative z-10">
+        <p>&copy; 2024 Udaykumar Bonagani. Engineered with <span class="text-red-500 animate-pulse">♥</span> & Code.</p>
     </footer>
 
     <!-- Scripts -->
     <script>
-        // Mobile Menu Toggle
+        // --- CUSTOM CURSOR LOGIC ---
+        const cursor = document.getElementById('cursor-atom');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Hover effect trigger
+            if (e.target.closest('a, button, input, textarea, .glazzy-card')) {
+                document.body.classList.add('hovering');
+            } else {
+                document.body.classList.remove('hovering');
+            }
+        });
+
+        function animateCursor() {
+            // Lerp smoothing factor (0.15 = snappy, 0.05 = lazy)
+            const speed = 0.2;
+            
+            cursorX += (mouseX - cursorX) * speed;
+            cursorY += (mouseY - cursorY) * speed;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // --- EXISTING UI LOGIC ---
         const btn = document.getElementById('menu-btn');
         const menu = document.getElementById('mobile-menu');
 
@@ -606,18 +808,16 @@
             menu.classList.toggle('hidden');
         });
 
-        // Smooth Scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                menu.classList.add('hidden'); // Close mobile menu on click
+                menu.classList.add('hidden'); 
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
             });
         });
 
-        // Intersection Observer for fade animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -627,9 +827,8 @@
             });
         }, { threshold: 0.1 });
 
-        // Apply observer to sections
         document.querySelectorAll('section > div').forEach((el) => {
-            el.style.opacity = 0; // Initial state
+            el.style.opacity = 0; 
             observer.observe(el);
         });
     </script>
